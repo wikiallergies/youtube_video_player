@@ -117,7 +117,7 @@ class Popup extends StatelessWidget {
                             controller.isInitialized.value = false;
                             controller.isPlaying.value = false;
                             controller.controller =
-                                VideoPlayerController.networkUrl(element.url,
+                                VideoPlayerController.network(element.url.toString(),
                                     videoPlayerOptions: VideoPlayerOptions())
                                   ..initialize().then((value) {
                                     controller.controller.seekTo(position);

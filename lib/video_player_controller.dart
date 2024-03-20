@@ -11,8 +11,12 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class VideoPlayerSreenController extends GetxController
     with GetTickerProviderStateMixin {
-  VideoPlayerSreenController({required this.link});
+  VideoPlayerSreenController({
+    required this.link,
+    this.autoPlay = false,
+  });
   final String link;
+  final bool autoPlay;
   // final String link =
   //     "https://archive.org/download/srimad-devi-bhagavatam-raja-visuddhi-dharmasar/Srimad%20Devi%20Bha%CC%84gavatam%201.5.1%E2%80%94%20Story%20of%20Hayagri%CC%84va.mp4";
   late VideoPlayerController controller;
@@ -80,15 +84,17 @@ class VideoPlayerSreenController extends GetxController
     }
     MuxedStreamInfo streamInfo = manifest!.muxed.bestQuality;
     var url = streamInfo.url;
-    controller = VideoPlayerController.networkUrl(
-      url,
+    controller = VideoPlayerController.network(
+      url.toString(),
       videoPlayerOptions: VideoPlayerOptions(),
     )..initialize().then((value) {
         position.value = controller.value.position;
         duration.value = controller.value.duration;
         isInitialized.value = true;
-        controller.play();
-        isPlaying.value = true;
+        if (autoPlay) {
+          controller.play();
+          isPlaying.value = true;
+        }
       });
     controller.addListener(() async {
       position.value = controller.value.position;
