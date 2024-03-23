@@ -12,9 +12,11 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 class VideoPlayerSreenController extends GetxController
     with GetTickerProviderStateMixin {
   VideoPlayerSreenController({
+    required this.key,
     required this.link,
     this.autoPlay = false,
   });
+  final String key;
   final String link;
   final bool autoPlay;
   // final String link =
@@ -84,8 +86,9 @@ class VideoPlayerSreenController extends GetxController
     }
     MuxedStreamInfo streamInfo = manifest!.muxed.bestQuality;
     var url = streamInfo.url;
+
     controller = VideoPlayerController.network(
-      url.toString(),
+      '$url?v=${DateTime.timestamp().microsecondsSinceEpoch}',
       videoPlayerOptions: VideoPlayerOptions(),
     )..initialize().then((value) {
         position.value = controller.value.position;

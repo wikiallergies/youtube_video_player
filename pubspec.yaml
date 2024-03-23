@@ -27,6 +27,7 @@ dependencies:
   video_player: 2.4.7
   wakelock: 0.6.2
   youtube_explode_dart: ^2.0.2
+  visibility_detector: ^0.3.3
 
 dev_dependencies:
   flutter_test:

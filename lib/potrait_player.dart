@@ -1,18 +1,18 @@
-import 'dart:io';
-
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wakelock/wakelock.dart';
-// import '../../const/colors/colors.dart';
-// import '../../const/constants/constants.dart';
-import 'video_player_controller.dart';
+
 // import '../../models/video_details/video_details_model.dart';
 import 'landscape_player_screen.dart';
 import 'popop.dart';
+// import '../../const/colors/colors.dart';
+// import '../../const/constants/constants.dart';
+import 'video_player_controller.dart';
 
 class PotraitPlayer extends StatelessWidget {
   final String link;
@@ -31,8 +31,15 @@ class PotraitPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable();
-    VideoPlayerSreenController controller =
-        Get.put(VideoPlayerSreenController(link: link));
+    final unitKey =
+        DateTime.timestamp().microsecondsSinceEpoch.toString() + link;
+    VideoPlayerSreenController controller = Get.put(
+        VideoPlayerSreenController(
+          link: link,
+          key: unitKey,
+        ),
+        tag: unitKey);
+    var unKey = UniqueKey();
     double width = MediaQuery.of(context).size.width;
     // File myAsset = File("packages/youtube_video_player/lib/assets/10for.svg");
     // controller.manifest =
@@ -45,6 +52,7 @@ class PotraitPlayer extends StatelessWidget {
     //     controller.isPlaying.value = true;
     //   });
     return OrientationBuilder(builder: (context, orientation) {
+      print(controller);
       return orientation == Orientation.portrait
           ? GestureDetector(
               child: AspectRatio(
@@ -61,7 +69,15 @@ class PotraitPlayer extends StatelessWidget {
                         ? Stack(
                             fit: StackFit.passthrough,
                             children: [
-                              VideoPlayer(controller.controller), //Video Player
+                              VisibilityDetector(
+                                key: unKey,
+                                onVisibilityChanged: (info) {
+                                  if (info.visibleFraction < 0.1) {
+                                    controller.controller.pause();
+                                  }
+                                },
+                                child: VideoPlayer(controller.controller),
+                              ), //Video Player
                               Obx(
                                 () => controller.caption.isNotEmpty
                                     ? ClosedCaption(
