@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:wakelock/wakelock.dart';
+
+// import 'package:wakelock/wakelock.dart';
 
 // import '../../models/video_details/video_details_model.dart';
 import 'landscape_player_screen.dart';
@@ -20,6 +21,8 @@ class PotraitPlayer extends StatelessWidget {
   final Color? kColorWhite;
   final Color? kColorPrimary;
   final Color? kColorBlack;
+  final bool isFullScreen;
+
   const PotraitPlayer({
     super.key,
     required this.link,
@@ -27,18 +30,18 @@ class PotraitPlayer extends StatelessWidget {
     this.kColorWhite,
     this.kColorPrimary,
     this.kColorBlack,
+    this.isFullScreen = false,
   });
   @override
   Widget build(BuildContext context) {
-    Wakelock.enable();
-    final unitKey =
-        DateTime.timestamp().microsecondsSinceEpoch.toString() + link;
+    // Wakelock.enable();
+    final tag = DateTime.timestamp().microsecondsSinceEpoch.toString() + link;
     VideoPlayerSreenController controller = Get.put(
         VideoPlayerSreenController(
           link: link,
-          key: unitKey,
+          key: tag,
         ),
-        tag: unitKey);
+        tag: tag);
     var unKey = UniqueKey();
     double width = MediaQuery.of(context).size.width;
     // File myAsset = File("packages/youtube_video_player/lib/assets/10for.svg");
@@ -52,7 +55,6 @@ class PotraitPlayer extends StatelessWidget {
     //     controller.isPlaying.value = true;
     //   });
     return OrientationBuilder(builder: (context, orientation) {
-      print(controller);
       return orientation == Orientation.portrait
           ? GestureDetector(
               child: AspectRatio(
@@ -387,9 +389,9 @@ class PotraitPlayer extends StatelessWidget {
                                         alignment: Alignment.bottomCenter,
                                         // height: 220,
                                         child: Container(
-                                          margin: const EdgeInsets.only(
+                                          margin: EdgeInsets.only(
                                               top: 30,
-                                              bottom: 30,
+                                              bottom: isFullScreen ? 30 : 0,
                                               left: 20,
                                               right: 18),
                                           child: Obx(
@@ -425,76 +427,79 @@ class PotraitPlayer extends StatelessWidget {
                                         ), //Progress Bar
                                       ),
                                       //Bottom Bar Settings and Full Screen
-                                      Positioned(
-                                          bottom: 0,
-                                          right: 10,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
+                                      if (isFullScreen)
+                                        Positioned(
+                                            bottom: 0,
+                                            right: 10,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                LandscapePlayer(
+                                                              videoPlayerSreenController:
+                                                                  controller,
+                                                              kColorBlack:
+                                                                  Colors.black,
+                                                              kColorPrimary:
+                                                                  Colors.orange,
+                                                              kColorWhite:
+                                                                  Colors.white,
+                                                            ),
+                                                          ));
+                                                    },
+                                                    style: TextButton.styleFrom(
+                                                      fixedSize:
+                                                          const Size(50, 50),
+                                                      minimumSize:
+                                                          const Size(50, 50),
+                                                      maximumSize:
+                                                          const Size(50, 50),
+                                                    ),
+                                                    child: SvgPicture.asset(
+                                                      "assets/icons/fullscreen.svg",
+                                                      width: 30,
+                                                      height: 30,
+                                                      package:
+                                                          "youtube_video_player",
+                                                    )),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      showModalBottomSheet(
+                                                          constraints: BoxConstraints(
+                                                              minWidth:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width),
+                                                          context: context,
                                                           builder: (context) =>
-                                                              LandscapePlayer(
-                                                            kColorBlack:
-                                                                Colors.black,
-                                                            kColorPrimary:
-                                                                Colors.orange,
-                                                            kColorWhite:
-                                                                Colors.white,
-                                                          ),
-                                                        ));
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    fixedSize:
-                                                        const Size(50, 50),
-                                                    minimumSize:
-                                                        const Size(50, 50),
-                                                    maximumSize:
-                                                        const Size(50, 50),
-                                                  ),
-                                                  child: SvgPicture.asset(
-                                                    "assets/icons/fullscreen.svg",
-                                                    width: 30,
-                                                    height: 30,
-                                                    package:
-                                                        "youtube_video_player",
-                                                  )),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    showModalBottomSheet(
-                                                        constraints: BoxConstraints(
-                                                            minWidth:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width),
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            Popup(),
-                                                        isScrollControlled:
-                                                            true);
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    fixedSize:
-                                                        const Size(55, 55),
-                                                    minimumSize:
-                                                        const Size(55, 55),
-                                                    maximumSize:
-                                                        const Size(55, 55),
-                                                  ),
-                                                  child: SvgPicture.asset(
-                                                    "assets/icons/settings.svg",
-                                                    width: 30,
-                                                    height: 30,
-                                                    package:
-                                                        "youtube_video_player",
-                                                  )),
-                                            ],
-                                          )),
+                                                              Popup(),
+                                                          isScrollControlled:
+                                                              true);
+                                                    },
+                                                    style: TextButton.styleFrom(
+                                                      fixedSize:
+                                                          const Size(55, 55),
+                                                      minimumSize:
+                                                          const Size(55, 55),
+                                                      maximumSize:
+                                                          const Size(55, 55),
+                                                    ),
+                                                    child: SvgPicture.asset(
+                                                      "assets/icons/settings.svg",
+                                                      width: 30,
+                                                      height: 30,
+                                                      package:
+                                                          "youtube_video_player",
+                                                    )),
+                                              ],
+                                            )),
                                     ],
                                   ),
                                 ),

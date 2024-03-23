@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
           link != null
               ? PotraitPlayer(
                   link: link!,
-                  aspectRatio: 16/9,
+                  aspectRatio: 16 / 9,
                   kColorBlack: Colors.black,
                   kColorPrimary: Colors.amber,
                   kColorWhite: Colors.white)
@@ -33,7 +33,8 @@ class _HomeState extends State<Home> {
                 suffix: IconButton.filledTonal(
                     onPressed: () {
                       setState(() {
-                        link = controller.text;                      });
+                        link = controller.text;
+                      });
                     },
                     icon: const Icon(Icons.add))),
           )

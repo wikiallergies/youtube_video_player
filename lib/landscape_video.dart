@@ -14,13 +14,17 @@ import 'video_player_controller.dart';
 
 class LandscapeVideo extends StatelessWidget {
   LandscapeVideo(
-      {Key? key, this.kColorWhite, this.kColorPrimary, this.kColorBlack})
+      {Key? key,
+      this.kColorWhite,
+      this.kColorPrimary,
+      this.kColorBlack,
+      required this.controller})
       : super(key: key);
   final Color? kColorWhite;
   final Color? kColorPrimary;
   final Color? kColorBlack;
-  final VideoPlayerSreenController controller =
-      Get.find<VideoPlayerSreenController>();
+  final VideoPlayerSreenController controller;
+
   final LandscapeController _controller = Get.put(LandscapeController());
   @override
   Widget build(BuildContext context) {
